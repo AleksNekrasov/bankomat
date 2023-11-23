@@ -89,83 +89,78 @@ int main()   // НУЖНО ПЕРЕДЕЛАТЬ НАЧАЛО ПРОГРАММЫ!
     int sum = 0;                       // СУММА, ЗАПРАШИВАЕМАЯ ПОЛЬЗОВАТЕЛЕМ!!!
     int banknote = 0;                  // БАНКНОТЫ (номиналы) , ХРАНЯЩИЕСЯ В БАНКОМАТЕ
 
-    std::ofstream file(path, std::ios::binary);   // создаем-открываем файл в бирарном виде
+    std::ifstream ifile(path, std::ios::binary);
 
-    if (!file.is_open())                          // проверка на открытие файла
+    if (!ifile.is_open())
     {
         std::cerr << "File is NOT open!";
         return 1;
-    }
+    }                                        // тут нужно заполнить массив банк через бинарный файл
 
-    std::cout << "enter the command + or -   :";
-    std::cin >> sign;
-    if (sign == '+')
-    {
-        filler(bank);                  // заполняем вектор-банк случайными купюрами
-        filler_bin(bank, file);        // сохраняем все в бинарном файле.
-    }
+   
+    ifile.close();
+        std::ofstream file(path, std::ios::binary);   // создаем-открываем файл в бирарном виде
 
-    else if (sign == '-')
-    {
-        do
+        if (!file.is_open())                          // проверка на открытие файла
         {
-            std::cout << "enter an amount that is a multiple of 100: ";
-            std::cin >> sum;
-        } 
-        while (sum % 100 != 0);
-
-        banknote = 5000;                             // вызываем фукцию для проверки наличия необходимых банкнот
-        sum = cashback(sum, banknote, bank);         // для выдачи интересующей суммы.
-
-        banknote = 2000;
-        sum = cashback(sum, banknote, bank);
-
-        banknote = 1000;
-        sum = cashback(sum, banknote, bank);
-
-        banknote = 500;
-        sum = cashback(sum, banknote, bank);
-
-        banknote = 200;
-        sum = cashback(sum, banknote, bank);
-
-        banknote = 100;
-        sum = cashback(sum, banknote, bank);
-
-        if (sum > 1)                                   // если нет в наличии нужных купюр для выдачи суммы                             
-        {
-            std::cout << " Sorry, the ATM does not have enough banknotes to dispense this amount.";
+            std::cerr << "File is NOT open!";
+            return 1;
         }
-        else if (sum == 1)                            // при заканчивании купюр в функции cashback  нам возвращается sum = 1;
+
+        std::cout << "enter the command + or -   :";
+        std::cin >> sign;
+        if (sign == '+')
         {
-            std::cout << "there is not enough money in the ATM ";
+            filler(bank);                  // заполняем вектор-банк случайными купюрами
+            filler_bin(bank, file);        // сохраняем все в бинарном файле.
         }
-        else if (sum == 0)                             // если вся сумма в банкоматев наличии 
+
+        else if (sign == '-')
         {
-            std::cout << "Take your money";
-            filler_bin(bank, file);
+            do
+            {
+                std::cout << "enter an amount that is a multiple of 100: ";
+                std::cin >> sum;
+            } while (sum % 100 != 0);
+
+            banknote = 5000;                             // вызываем фукцию для проверки наличия необходимых банкнот
+            sum = cashback(sum, banknote, bank);         // для выдачи интересующей суммы.
+
+            banknote = 2000;
+            sum = cashback(sum, banknote, bank);
+
+            banknote = 1000;
+            sum = cashback(sum, banknote, bank);
+
+            banknote = 500;
+            sum = cashback(sum, banknote, bank);
+
+            banknote = 200;
+            sum = cashback(sum, banknote, bank);
+
+            banknote = 100;
+            sum = cashback(sum, banknote, bank);
+
+            if (sum > 1)                                   // если нет в наличии нужных купюр для выдачи суммы                             
+            {
+                std::cout << " Sorry, the ATM does not have enough banknotes to dispense this amount.";
+            }
+            else if (sum == 1)                            // при заканчивании купюр в функции cashback  нам возвращается sum = 1;
+            {
+                std::cout << "there is not enough money in the ATM ";
+            }
+            else if (sum == 0)                             // если вся сумма в банкоматев наличии 
+            {
+                std::cout << "Take your money";
+                filler_bin(bank, file);
+            }
+
+
         }
-        
-
-    }
-    else std::cout << "unidentified command";
-
-
-    
-    
-                    
-
-
-
-
-    // проверка
-    // filler(bank);
-    //for (int i = 0; i < bank.size(); i++)
-   // {
-    //    std::cout << bank[i] << " ";
-   // }
-    file.close();
+        else std::cout << "unidentified command";
+        file.close();
 }
+
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
 // Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
