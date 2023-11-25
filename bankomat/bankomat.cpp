@@ -36,7 +36,7 @@ void filler_bin(std::vector<int>& bank,std::ofstream& file)   // заполне�
 {
     for (int i = 0; i < bank.size(); i++)
     {
-        file << bank[i] << std::endl;
+        file.write(reinterpret_cast<char*>(&bank[i]), sizeof(int));
     }
 }
 
@@ -80,7 +80,7 @@ int cashback(int sum, int banknote, std::vector<int>& bank)               // в�
     return (sum % banknote + cash * banknote);
 }
 
-int main()   // НУЖНО ПЕРЕДЕЛАТЬ НАЧАЛО ПРОГРАММЫ!  В НАЧАЛЕ ПРОГРАММЫ В ВЕКТОР НУЖНО ВЫГРУЖАТЬ ДАННЫЕ ИЗ БИНАРНОГО ФАЙЛА!!
+int main()   
 {
     std::srand(std::time(nullptr));
     std::vector <int> bank;             //вектор хранящихся купюр
@@ -88,14 +88,18 @@ int main()   // НУЖНО ПЕРЕДЕЛАТЬ НАЧАЛО ПРОГРАММЫ!
     char sign;                          // символ- ввод пользователем '+' или '-'
     int sum = 0;                       // СУММА, ЗАПРАШИВАЕМАЯ ПОЛЬЗОВАТЕЛЕМ!!!
     int banknote = 0;                  // БАНКНОТЫ (номиналы) , ХРАНЯЩИЕСЯ В БАНКОМАТЕ
-
+    int value;
     std::ifstream ifile(path, std::ios::binary);
 
     if (!ifile.is_open())
     {
         std::cerr << "File is NOT open!";
         return 1;
-    }                                        // тут нужно заполнить массив банк через бинарный файл
+    }                                      
+    while (ifile.read(reinterpret_cast<char*>(&value), sizeof(int))) 
+    {
+        bank.push_back(value);
+    }
 
    
     ifile.close();
